@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-__powerline() {
+__powerbash() {
     # external commands
     readonly GIT_CMD="env LANG=C git"
 
@@ -246,5 +246,5 @@ __powerline() {
     PROMPT_COMMAND=set_ps1
 }
 
-__powerline
-unset __powerline
+__powerbash
+unset __powerbash
