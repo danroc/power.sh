@@ -173,8 +173,7 @@ __powerbash() {
             local bg_color="$COLOR_CMD_FAILED_BG"
             local fg_color="$COLOR_CMD_FAILED_FG"
         fi
-        [[ "$1" -ne 0 ]] && local code="($1) "
-        apply_color " ${code}\\$ " "$fg_color" "$bg_color"
+        apply_color ' \\$ ' "$fg_color" "$bg_color"
     }
 
     # ------------------------------------------------------------------------ #
