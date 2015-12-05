@@ -73,22 +73,6 @@ __powerbash() {
     }
 
     # ------------------------------------------------------------------------ #
-    # Splits the $PWD variable into an array.                                  #
-    # Arguments:                                                               #
-    #    None                                                                  #
-    # ------------------------------------------------------------------------ #
-    split_pwd() {
-        if [[ "$PWD" == "/" ]]; then
-            echo '/'
-        else
-            local working="$PWD"
-            [[ "$PWD" =~ ^"$HOME"(/|$) ]] && working="~${working#$HOME}"
-            local IFS='/'
-            echo $working
-        fi
-    }
-
-    # ------------------------------------------------------------------------ #
     # Builds the git segment.                                                  #
     # Arguments:                                                               #
     #    None                                                                  #
@@ -205,7 +189,13 @@ __powerbash() {
             local sp_color="$COLOR_PATH_SEPARATOR"
         fi
 
-        local folders=($(split_pwd))
+        local folders
+        if [[ "$PWD" == "/" ]]; then
+            folders='/'
+        else
+            [[ "$PWD" =~ ^"$HOME"(/|$) ]] && folders="~${PWD#$HOME}"
+            IFS='/' read -a folders <<< "$folders"
+        fi
         local limit="$(( ${#folders[*]} - $MAX_PATH_DEPTH ))"
 
         local separator=""
