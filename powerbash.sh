@@ -189,12 +189,12 @@ __powerbash() {
             local sp_color="$COLOR_PATH_SEPARATOR"
         fi
 
-        local folders
+        local folders="$PWD"
         if [[ "$PWD" == "/" ]]; then
             folders='/'
         else
             [[ "$PWD" =~ ^"$HOME"(/|$) ]] && folders="~${PWD#$HOME}"
-            IFS='/' read -a folders <<< "$folders"
+            IFS='/' read -a folders <<< "${folders#'/'}"
         fi
         local limit="$(( ${#folders[*]} - $MAX_PATH_DEPTH ))"
 
