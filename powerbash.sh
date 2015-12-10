@@ -86,18 +86,19 @@ __powerbash() {
         local branch="$($GIT_CMD symbolic-ref --short HEAD || $GIT_CMD describe --tags --always)"
         [[ -n "$branch" ]] || return
 
-        local repo_status="$($GIT_CMD status --porcelain --branch)"
+        # check if there are modifications on current branch
+        local has_modified="$($GIT_CMD status --porcelain)"
+        local untrack_count="$(echo "$has_modified" | grep '^?? ' | wc -l | grep -o '[[:digit:]]\+')"
 
-        # keep these lines aligned to easily spot typos
-        local  has_modified="$(echo "$repo_status" | grep '^.. ' | grep '[MADRCU]')"
-        local  behind_count="$(echo "$repo_status" | grep '^## ' | grep -o '\[behind [[:digit:]]\+\]$' | grep -o '[[:digit:]]\+')"
-        local   ahead_count="$(echo "$repo_status" | grep '^## ' | grep -o  '\[ahead [[:digit:]]\+\]$' | grep -o '[[:digit:]]\+')"
-        local untrack_count="$(echo "$repo_status" | grep '^?? ' | wc -l                               | grep -o '[[:digit:]]\+')"
+        # count number of revisions ahead or behind origin
+        local repo_info="$($GIT_CMD status --porcelain --branch)"
+        local  ahead_count="$(echo "$repo_status" | grep '^## ' | grep -o  '\[ahead [[:digit:]]\+\]$' | grep -o '[[:digit:]]\+')"
+        local behind_count="$(echo "$repo_status" | grep '^## ' | grep -o '\[behind [[:digit:]]\+\]$' | grep -o '[[:digit:]]\+')"
 
         local marks=""
         [[ "$untrack_count" -gt 0 ]] && marks+=" ${SYMBOL_GIT_UNTRACKED}${untrack_count}"
-        [[ -n "$ahead_count" ]] && marks+=" ${SYMBOL_GIT_AHEAD}${ahead_count}"
-        [[ -n "$behind_count" ]] && marks+=" ${SYMBOL_GIT_BEHIND}${behind_count}"
+        [[ -n "$ahead_count"      ]] && marks+=" ${SYMBOL_GIT_AHEAD}${ahead_count}"
+        [[ -n "$behind_count"     ]] && marks+=" ${SYMBOL_GIT_BEHIND}${behind_count}"
 
         if [[ -n "$has_modified" ]]; then
             local bg_color="$COLOR_REPO_DIRTY_BG"
