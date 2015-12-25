@@ -202,9 +202,9 @@ __powerbash() {
         local separator=""
         for i in ${!folders[*]}; do
             if [[ "$i" -eq 0 ]] || [[ "$i" -gt "$limit" ]]; then
-                folder="${folders[$i]}"
+                local folder="${folders[$i]}"
             elif [[ "$i" -eq 1 ]]; then
-                folder="$SYMBOL_ELLIPSIS"
+                local folder="$SYMBOL_ELLIPSIS"
             else
                 continue
             fi
