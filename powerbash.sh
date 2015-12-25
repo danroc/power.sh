@@ -91,7 +91,7 @@ __powerbash() {
         local untrack_count="$(echo "$has_modified" | grep '^?? ' | wc -l | grep -o '[[:digit:]]\+')"
 
         # count number of revisions ahead or behind origin
-        local repo_info="$($GIT_CMD status --porcelain --branch)"
+        local  repo_status="$($GIT_CMD status --porcelain --branch)"
         local  ahead_count="$(echo "$repo_status" | grep '^## ' | grep -o  '\[ahead [[:digit:]]\+\]$' | grep -o '[[:digit:]]\+')"
         local behind_count="$(echo "$repo_status" | grep '^## ' | grep -o '\[behind [[:digit:]]\+\]$' | grep -o '[[:digit:]]\+')"
 
