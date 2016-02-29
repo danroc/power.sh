@@ -101,13 +101,13 @@ __powerbash() {
         [[ $behind_count        ]] && marks+=" ${SYMBOL_GIT_BEHIND}${behind_count}"
 
         if [[ $has_modified ]]; then
-            local bg_color="$COLOR_REPO_DIRTY_BG"
-            local fg_color="$COLOR_REPO_DIRTY_FG"
+            local bg_color=$COLOR_REPO_DIRTY_BG
+            local fg_color=$COLOR_REPO_DIRTY_FG
         else
-            local bg_color="$COLOR_REPO_CLEAN_BG"
-            local fg_color="$COLOR_REPO_CLEAN_FG"
+            local bg_color=$COLOR_REPO_CLEAN_BG
+            local fg_color=$COLOR_REPO_CLEAN_FG
         fi
-        apply_color " ${SYMBOL_GIT_BRANCH}${branch}${marks} " "$fg_color" "$bg_color"
+        apply_color " ${SYMBOL_GIT_BRANCH}${branch}${marks} " $fg_color $bg_color
     }
 
     # ------------------------------------------------------------------------ #
@@ -117,7 +117,7 @@ __powerbash() {
     # ------------------------------------------------------------------------ #
     build_seg_jobs() {
         local count="$(jobs | wc -l | grep -o '[[:digit:]]\+')"
-        [[ $count -gt 0 ]] && apply_color " $count " "$COLOR_JOBS_FG" "$COLOR_JOBS_BG"
+        [[ $count -gt 0 ]] && apply_color " $count " $COLOR_JOBS_FG $COLOR_JOBS_BG
     }
 
     # ------------------------------------------------------------------------ #
@@ -127,13 +127,13 @@ __powerbash() {
     # ------------------------------------------------------------------------ #
     build_seg_username() {
         if id -G | grep -qE '\<(544|0)\>' ; then
-            local bg_color="$COLOR_USERNAME_ROOT_BG"
-            local fg_color="$COLOR_USERNAME_ROOT_FG"
+            local bg_color=$COLOR_USERNAME_ROOT_BG
+            local fg_color=$COLOR_USERNAME_ROOT_FG
         else
-            local bg_color="$COLOR_USERNAME_BG"
-            local fg_color="$COLOR_USERNAME_FG"
+            local bg_color=$COLOR_USERNAME_BG
+            local fg_color=$COLOR_USERNAME_FG
         fi
-        apply_color ' \\u ' "$fg_color" "$bg_color"
+        apply_color ' \\u ' $fg_color $bg_color
     }
 
     # ------------------------------------------------------------------------ #
@@ -142,7 +142,7 @@ __powerbash() {
     #    None                                                                  #
     # ------------------------------------------------------------------------ #
     build_seg_hostname() {
-        apply_color ' \\h ' "$COLOR_HOSTNAME_FG" "$COLOR_HOSTNAME_BG"
+        apply_color ' \\h ' $COLOR_HOSTNAME_FG $COLOR_HOSTNAME_BG
     }
 
     # ------------------------------------------------------------------------ #
@@ -152,13 +152,13 @@ __powerbash() {
     # ------------------------------------------------------------------------ #
     build_seg_ps() {
         if [[ $1 -eq 0 ]]; then
-            local bg_color="$COLOR_CMD_PASSED_BG"
-            local fg_color="$COLOR_CMD_PASSED_FG"
+            local bg_color=$COLOR_CMD_PASSED_BG
+            local fg_color=$COLOR_CMD_PASSED_FG
         else
-            local bg_color="$COLOR_CMD_FAILED_BG"
-            local fg_color="$COLOR_CMD_FAILED_FG"
+            local bg_color=$COLOR_CMD_FAILED_BG
+            local fg_color=$COLOR_CMD_FAILED_FG
         fi
-        apply_color ' \\$ ' "$fg_color" "$bg_color"
+        apply_color ' \\$ ' $fg_color $bg_color
     }
 
     # ------------------------------------------------------------------------ #
@@ -167,7 +167,7 @@ __powerbash() {
     #    None                                                                  #
     # ------------------------------------------------------------------------ #
     build_seg_ssh() {
-        [[ $SSH_CLIENT ]] && apply_color " $SYMBOL_SSH " "$COLOR_SSH_FG" "$COLOR_SSH_BG"
+        [[ $SSH_CLIENT ]] && apply_color " $SYMBOL_SSH " $COLOR_SSH_FG $COLOR_SSH_BG
     }
 
     # ------------------------------------------------------------------------ #
@@ -177,17 +177,17 @@ __powerbash() {
     # ------------------------------------------------------------------------ #
     build_seg_path() {
         if [[ ! -w $PWD ]]; then
-            local bg_color="$COLOR_READONLY_BG"
-            local fg_color="$COLOR_READONLY_FG"
-            local sp_color="$COLOR_READONLY_SEPARATOR"
+            local bg_color=$COLOR_READONLY_BG
+            local fg_color=$COLOR_READONLY_FG
+            local sp_color=$COLOR_READONLY_SEPARATOR
         elif [[ $PWD == $HOME ]]; then
-            local bg_color="$COLOR_HOME_BG"
-            local fg_color="$COLOR_HOME_FG"
-            local sp_color=""
+            local bg_color=$COLOR_HOME_BG
+            local fg_color=$COLOR_HOME_FG
+            local sp_color
         else
-            local bg_color="$COLOR_PATH_BG"
-            local fg_color="$COLOR_PATH_FG"
-            local sp_color="$COLOR_PATH_SEPARATOR"
+            local bg_color=$COLOR_PATH_BG
+            local fg_color=$COLOR_PATH_FG
+            local sp_color=$COLOR_PATH_SEPARATOR
         fi
 
         local folders="$PWD"
@@ -199,7 +199,7 @@ __powerbash() {
         fi
         local limit="$(( ${#folders[*]} - $MAX_PATH_DEPTH ))"
 
-        local separator=""
+        local separator
         for i in ${!folders[*]}; do
             if [[ $i -eq 0 ]] || [[ $i -gt $limit ]]; then
                 local folder="${folders[$i]}"
@@ -208,8 +208,8 @@ __powerbash() {
             else
                 continue
             fi
-            apply_color "$separator" "$sp_color"
-            apply_color " $folder " "$fg_color" "$bg_color"
+            apply_color "$separator" $sp_color
+            apply_color " $folder " $fg_color $bg_color
             separator="$SYMBOL_PATH_SEPARATOR"
         done
     }
@@ -220,7 +220,7 @@ __powerbash() {
     #    None                                                                  #
     # ------------------------------------------------------------------------ #
     set_ps1() {
-        local exit_code="$?"
+        local exit_code=$?
 
         PS1=""
         PS1+="$(build_seg_ssh)"
@@ -229,7 +229,7 @@ __powerbash() {
         PS1+="$(build_seg_path)"
         PS1+="$(build_seg_git)"
         PS1+="$(build_seg_jobs)"
-        PS1+="$(build_seg_ps "$exit_code")"
+        PS1+="$(build_seg_ps $exit_code)"
         PS1+="\[\033[0m\] " # reset colors
     }
 
