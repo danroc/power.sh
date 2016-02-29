@@ -61,13 +61,13 @@ __powerbash() {
     #    $3 - Background color                                                 #
     # ------------------------------------------------------------------------ #
     apply_color() {
-        if [[ -n "$3" ]]; then
+        if [[ $3 ]]; then
             printf "\[\033[48;5;$3m\]"
         fi
-        if [[ -n "$2" ]]; then
+        if [[ $2 ]]; then
             printf "\[\033[38;5;$2m\]"
         fi
-        if [[ -n "$1" ]]; then
+        if [[ $1 ]]; then
             printf "$1"
         fi
     }
@@ -84,7 +84,7 @@ __powerbash() {
 
         # get current branch name or hash
         local branch="$($GIT_CMD symbolic-ref --short HEAD || $GIT_CMD describe --tags --always)"
-        [[ -n "$branch" ]] || return
+        [[ $branch ]] || return
 
         # check if there are modifications on current branch
         local has_modified="$($GIT_CMD status --porcelain)"
@@ -96,11 +96,11 @@ __powerbash() {
         local behind_count="$(echo "$repo_status" | grep '^## ' | grep -o '\[behind [[:digit:]]\+\]$' | grep -o '[[:digit:]]\+')"
 
         local marks=""
-        [[ "$untrack_count" -gt 0 ]] && marks+=" ${SYMBOL_GIT_UNTRACKED}${untrack_count}"
-        [[ -n "$ahead_count"      ]] && marks+=" ${SYMBOL_GIT_AHEAD}${ahead_count}"
-        [[ -n "$behind_count"     ]] && marks+=" ${SYMBOL_GIT_BEHIND}${behind_count}"
+        [[ $untrack_count -gt 0 ]] && marks+=" ${SYMBOL_GIT_UNTRACKED}${untrack_count}"
+        [[ $ahead_count         ]] && marks+=" ${SYMBOL_GIT_AHEAD}${ahead_count}"
+        [[ $behind_count        ]] && marks+=" ${SYMBOL_GIT_BEHIND}${behind_count}"
 
-        if [[ -n "$has_modified" ]]; then
+        if [[ $has_modified ]]; then
             local bg_color="$COLOR_REPO_DIRTY_BG"
             local fg_color="$COLOR_REPO_DIRTY_FG"
         else
@@ -117,7 +117,7 @@ __powerbash() {
     # ------------------------------------------------------------------------ #
     build_seg_jobs() {
         local count="$(jobs | wc -l | grep -o '[[:digit:]]\+')"
-        [[ "$count" -gt 0 ]] && apply_color " $count " "$COLOR_JOBS_FG" "$COLOR_JOBS_BG"
+        [[ $count -gt 0 ]] && apply_color " $count " "$COLOR_JOBS_FG" "$COLOR_JOBS_BG"
     }
 
     # ------------------------------------------------------------------------ #
@@ -151,7 +151,7 @@ __powerbash() {
     #    $1 - Last exit code                                                   #
     # ------------------------------------------------------------------------ #
     build_seg_ps() {
-        if [[ "$1" -eq 0 ]]; then
+        if [[ $1 -eq 0 ]]; then
             local bg_color="$COLOR_CMD_PASSED_BG"
             local fg_color="$COLOR_CMD_PASSED_FG"
         else
@@ -167,7 +167,7 @@ __powerbash() {
     #    None                                                                  #
     # ------------------------------------------------------------------------ #
     build_seg_ssh() {
-        [[ -n "$SSH_CLIENT" ]] && apply_color " $SYMBOL_SSH " "$COLOR_SSH_FG" "$COLOR_SSH_BG"
+        [[ $SSH_CLIENT ]] && apply_color " $SYMBOL_SSH " "$COLOR_SSH_FG" "$COLOR_SSH_BG"
     }
 
     # ------------------------------------------------------------------------ #
@@ -176,11 +176,11 @@ __powerbash() {
     #    None                                                                  #
     # ------------------------------------------------------------------------ #
     build_seg_path() {
-        if [[ ! -w "$PWD" ]]; then
+        if [[ ! -w $PWD ]]; then
             local bg_color="$COLOR_READONLY_BG"
             local fg_color="$COLOR_READONLY_FG"
             local sp_color="$COLOR_READONLY_SEPARATOR"
-        elif [[ "$PWD" == "$HOME" ]]; then
+        elif [[ $PWD == $HOME ]]; then
             local bg_color="$COLOR_HOME_BG"
             local fg_color="$COLOR_HOME_FG"
             local sp_color=""
@@ -191,19 +191,19 @@ __powerbash() {
         fi
 
         local folders="$PWD"
-        if [[ "$PWD" == "/" ]]; then
+        if [[ $PWD == "/" ]]; then
             folders='/'
         else
-            [[ "$PWD" =~ ^"$HOME"(/|$) ]] && folders="~${PWD#$HOME}"
+            [[ $PWD =~ ^$HOME(/|$) ]] && folders="~${PWD#$HOME}"
             IFS='/' read -a folders <<< "${folders#'/'}"
         fi
         local limit="$(( ${#folders[*]} - $MAX_PATH_DEPTH ))"
 
         local separator=""
         for i in ${!folders[*]}; do
-            if [[ "$i" -eq 0 ]] || [[ "$i" -gt "$limit" ]]; then
+            if [[ $i -eq 0 ]] || [[ $i -gt $limit ]]; then
                 local folder="${folders[$i]}"
-            elif [[ "$i" -eq 1 ]]; then
+            elif [[ $i -eq 1 ]]; then
                 local folder="$SYMBOL_ELLIPSIS"
             else
                 continue
