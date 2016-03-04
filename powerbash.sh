@@ -197,7 +197,7 @@ __powerbash() {
             [[ $PWD =~ ^$HOME(/|$) ]] && folders="~${PWD#$HOME}"
             IFS='/' read -a folders <<< "${folders#'/'}"
         fi
-        local limit="$(( ${#folders[*]} - $MAX_PATH_DEPTH ))"
+        local limit=$(( ${#folders[*]} - $MAX_PATH_DEPTH ))
 
         local separator
         for i in ${!folders[*]}; do
