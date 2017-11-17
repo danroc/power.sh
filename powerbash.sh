@@ -88,17 +88,14 @@ __powerbash() {
 
         # check if there are modifications on current branch
         local has_modified="$($GIT_CMD status --porcelain)"
-        local untrack_count=$(echo "$has_modified" | grep '^?? ' | wc -l | grep -o '[[:digit:]]\+')
+        local untrack_count=$(echo "$has_modified" | grep '^?? ' | wc -l | tr -dc '[:digit:]')
 
         # count number of revisions ahead or behind origin
-        local  repo_status="$($GIT_CMD status --porcelain --branch)"
-        local  ahead_count=$(echo "$repo_status" | grep '^## ' | grep -o  '\[ahead [[:digit:]]\+\]$' | grep -o '[[:digit:]]\+')
-        local behind_count=$(echo "$repo_status" | grep '^## ' | grep -o '\[behind [[:digit:]]\+\]$' | grep -o '[[:digit:]]\+')
-
+        local repo_status="$($GIT_CMD status --porcelain --branch)"
         local marks=""
         [[ $untrack_count -gt 0 ]] && marks+=" ${SYMBOL_GIT_UNTRACKED}${untrack_count}"
-        [[ $ahead_count         ]] && marks+=" ${SYMBOL_GIT_AHEAD}${ahead_count}"
-        [[ $behind_count        ]] && marks+=" ${SYMBOL_GIT_BEHIND}${behind_count}"
+        [[ $repo_status =~  "ahead ([0-9]+)" ]] && marks+=" ${SYMBOL_GIT_AHEAD}${BASH_REMATCH[1]}"
+        [[ $repo_status =~ "behind ([0-9]+)" ]] && marks+=" ${SYMBOL_GIT_BEHIND}${BASH_REMATCH[1]}"
 
         if [[ $has_modified ]]; then
             local bg_color=$COLOR_REPO_DIRTY_BG
