@@ -224,8 +224,8 @@ __powerbash() {
 
         PS1=""
         PS1+="$(build_seg_ssh)"
-        PS1+="$(build_seg_username)"
-        PS1+="$(build_seg_hostname)"
+        # PS1+="$(build_seg_username)"
+        # PS1+="$(build_seg_hostname)"
         PS1+="$(build_seg_path)"
         PS1+="$(build_seg_git)"
         PS1+="$(build_seg_jobs)"
