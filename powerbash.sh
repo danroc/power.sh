@@ -94,8 +94,8 @@ __powerbash() {
         local repo_status="$($GIT_CMD status --porcelain --branch)"
         local marks=""
         [[ $untrack_count -gt 0 ]] && marks+=" ${SYMBOL_GIT_UNTRACKED}${untrack_count}"
-        [[ $repo_status =~  "ahead ([0-9]+)" ]] && marks+=" ${SYMBOL_GIT_AHEAD}${BASH_REMATCH[1]}"
-        [[ $repo_status =~ "behind ([0-9]+)" ]] && marks+=" ${SYMBOL_GIT_BEHIND}${BASH_REMATCH[1]}"
+        [[ $repo_status =~  ahead\ ([0-9]+) ]] && marks+=" ${SYMBOL_GIT_AHEAD}${BASH_REMATCH[1]}"
+        [[ $repo_status =~ behind\ ([0-9]+) ]] && marks+=" ${SYMBOL_GIT_BEHIND}${BASH_REMATCH[1]}"
 
         if [[ $has_modified ]]; then
             local bg_color=$COLOR_REPO_DIRTY_BG
