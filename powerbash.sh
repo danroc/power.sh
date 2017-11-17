@@ -113,7 +113,7 @@ __powerbash() {
     #    None                                                                  #
     # ------------------------------------------------------------------------ #
     build_seg_jobs() {
-        local count="$(jobs | wc -l | grep -o '[[:digit:]]\+')"
+        local count="$(jobs | wc -l | tr -dc '0-9')"
         [[ $count -gt 0 ]] && apply_color " $count " $COLOR_JOBS_FG $COLOR_JOBS_BG
     }
 
