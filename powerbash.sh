@@ -1,57 +1,57 @@
 #!/usr/bin/env bash
 
 __powerbash() {
-    # external commands
-    readonly GIT_CMD="env LANG=C git"
+    # External commands
+    GIT_CMD="env LANG=C git"
 
-    # max number of folders in path
-    readonly MAX_PATH_DEPTH=4
+    # Max number of path segments
+    MAX_PATH_DEPTH=4
 
-    # symbols
-    readonly SYMBOL_GIT_UNTRACKED='+'
-    readonly SYMBOL_GIT_AHEAD='↑'
-    readonly SYMBOL_GIT_BEHIND='↓'
-    readonly SYMBOL_GIT_BRANCH=''
+    # Symbols
+    SYMBOL_GIT_UNTRACKED='+'
+    SYMBOL_GIT_AHEAD='↑'
+    SYMBOL_GIT_BEHIND='↓'
+    SYMBOL_GIT_BRANCH=''
 
-    readonly SYMBOL_PATH_SEPARATOR='❯'
-    readonly SYMBOL_SSH='SSH'
-    readonly SYMBOL_ELLIPSIS='…'
+    SYMBOL_PATH_SEPARATOR='❯'
+    SYMBOL_SSH='SSH'
+    SYMBOL_ELLIPSIS='…'
 
-    # colors
-    readonly COLOR_SSH_BG=166
-    readonly COLOR_SSH_FG=254
+    # Color scheme
+    COLOR_SSH_BG=166
+    COLOR_SSH_FG=254
 
-    readonly COLOR_JOBS_BG=238
-    readonly COLOR_JOBS_FG=39
+    COLOR_JOBS_BG=238
+    COLOR_JOBS_FG=39
 
-    readonly COLOR_REPO_CLEAN_BG=148
-    readonly COLOR_REPO_CLEAN_FG=0
-    readonly COLOR_REPO_DIRTY_BG=161
-    readonly COLOR_REPO_DIRTY_FG=15
+    COLOR_REPO_CLEAN_BG=148
+    COLOR_REPO_CLEAN_FG=0
+    COLOR_REPO_DIRTY_BG=161
+    COLOR_REPO_DIRTY_FG=15
 
-    readonly COLOR_USERNAME_ROOT_BG=124
-    readonly COLOR_USERNAME_ROOT_FG=250
-    readonly COLOR_USERNAME_BG=240
-    readonly COLOR_USERNAME_FG=250
+    COLOR_USERNAME_ROOT_BG=124
+    COLOR_USERNAME_ROOT_FG=250
+    COLOR_USERNAME_BG=240
+    COLOR_USERNAME_FG=250
 
-    readonly COLOR_HOSTNAME_FG=250
-    readonly COLOR_HOSTNAME_BG=238
+    COLOR_HOSTNAME_FG=250
+    COLOR_HOSTNAME_BG=238
 
-    readonly COLOR_PATH_BG=237
-    readonly COLOR_PATH_FG=250
-    readonly COLOR_PATH_SEPARATOR=244
+    COLOR_PATH_BG=237
+    COLOR_PATH_FG=250
+    COLOR_PATH_SEPARATOR=244
 
-    readonly COLOR_HOME_BG=31
-    readonly COLOR_HOME_FG=15
+    COLOR_HOME_BG=31
+    COLOR_HOME_FG=15
 
-    readonly COLOR_READONLY_BG=124
-    readonly COLOR_READONLY_FG=254
-    readonly COLOR_READONLY_SEPARATOR=248
+    COLOR_READONLY_BG=124
+    COLOR_READONLY_FG=254
+    COLOR_READONLY_SEPARATOR=248
 
-    readonly COLOR_CMD_PASSED_BG=236
-    readonly COLOR_CMD_PASSED_FG=15
-    readonly COLOR_CMD_FAILED_BG=161
-    readonly COLOR_CMD_FAILED_FG=15
+    COLOR_CMD_PASSED_BG=236
+    COLOR_CMD_PASSED_FG=15
+    COLOR_CMD_FAILED_BG=161
+    COLOR_CMD_FAILED_FG=15
 
     # ------------------------------------------------------------------------ #
     # Applies foreground/background colors.                                    #
