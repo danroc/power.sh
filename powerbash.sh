@@ -11,7 +11,6 @@ __powerbash() {
     SYMBOL_GIT_UNTRACKED='+'
     SYMBOL_GIT_AHEAD='↑'
     SYMBOL_GIT_BEHIND='↓'
-    SYMBOL_GIT_BRANCH=''
 
     SYMBOL_PATH_SEPARATOR='❯'
     SYMBOL_SSH='SSH'
@@ -104,7 +103,7 @@ __powerbash() {
             local bg_color=$COLOR_REPO_CLEAN_BG
             local fg_color=$COLOR_REPO_CLEAN_FG
         fi
-        apply_color " ${SYMBOL_GIT_BRANCH}${branch}${marks} " $fg_color $bg_color
+        apply_color " ${branch}${marks} " $fg_color $bg_color
     }
 
     # ------------------------------------------------------------------------ #
