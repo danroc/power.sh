@@ -38,6 +38,7 @@ __powerbash() {
 
     COLOR_PATH_BG=237
     COLOR_PATH_FG=250
+    COLOR_PATH_CWD=254
     COLOR_PATH_SEPARATOR=244
 
     COLOR_HOME_BG=31
@@ -172,20 +173,6 @@ __powerbash() {
     #    None                                                                  #
     # ------------------------------------------------------------------------ #
     build_seg_path() {
-        if [[ ! -w $PWD ]]; then
-            local bg_color=$COLOR_READONLY_BG
-            local fg_color=$COLOR_READONLY_FG
-            local sp_color=$COLOR_READONLY_SEPARATOR
-        elif [[ $PWD == $HOME ]]; then
-            local bg_color=$COLOR_HOME_BG
-            local fg_color=$COLOR_HOME_FG
-            local sp_color
-        else
-            local bg_color=$COLOR_PATH_BG
-            local fg_color=$COLOR_PATH_FG
-            local sp_color=$COLOR_PATH_SEPARATOR
-        fi
-
         local folders="$PWD"
         if [[ $PWD == "/" ]]; then
             folders='/'
@@ -203,6 +190,22 @@ __powerbash() {
                 local folder="$SYMBOL_ELLIPSIS"
             else
                 continue
+            fi
+
+            if [[ ! -w $PWD ]]; then
+                local bg_color=$COLOR_READONLY_BG
+                local fg_color=$COLOR_READONLY_FG
+                local sp_color=$COLOR_READONLY_SEPARATOR
+            elif [[ $PWD == $HOME ]]; then
+                local bg_color=$COLOR_HOME_BG
+                local fg_color=$COLOR_HOME_FG
+            else
+                local bg_color=$COLOR_PATH_BG
+                local fg_color=$COLOR_PATH_FG
+                local sp_color=$COLOR_PATH_SEPARATOR
+                if [[ $i -eq $(( ${#folders[*]} - 1 )) ]]; then
+                    fg_color=$COLOR_PATH_CWD
+                fi
             fi
             apply_color "$separator" $sp_color
             apply_color " $folder " $fg_color $bg_color
