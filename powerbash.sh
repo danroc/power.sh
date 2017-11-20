@@ -88,7 +88,7 @@ __powerbash() {
 
         # check if there are modifications on current branch
         local has_modified="$($GIT_CMD status --porcelain)"
-        local untrack_count=$(grep '^?? ' <<< $has_modified | wc -l | tr -dc '0-9')
+        local untrack_count=$(grep '^?? ' <<< $has_modified | wc -l | awk '{print $1}')
 
         # count number of revisions ahead or behind origin
         local repo_status="$($GIT_CMD status --porcelain --branch)"
@@ -113,7 +113,7 @@ __powerbash() {
     #    None                                                                  #
     # ------------------------------------------------------------------------ #
     build_seg_jobs() {
-        local count="$(jobs | wc -l | tr -dc '0-9')"
+        local count="$(jobs | wc -l | awk '{print $1}')"
         [[ $count -gt 0 ]] && apply_color " $count " $COLOR_JOBS_FG $COLOR_JOBS_BG
     }
 
