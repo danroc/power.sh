@@ -88,7 +88,7 @@ __powerbash() {
 
         # check if there are modifications on current branch
         local has_modified="$($GIT_CMD status --porcelain)"
-        local untrack_count=$(grep '^?? ' <<< $has_modified | wc -l | awk '{print $1}')
+        local untrack_count=$(grep '^?? ' <<< "$has_modified" | wc -l | awk '{print $1}')
 
         # count number of revisions ahead or behind origin
         local repo_status="$($GIT_CMD status --porcelain --branch)"
