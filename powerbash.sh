@@ -91,12 +91,13 @@ __powerbash() {
         [[ $repo_status =~  ahead\ ([0-9]+) ]] && marks+=" ${SYMBOL_GIT_AHEAD}${BASH_REMATCH[1]}"
         [[ $repo_status =~ behind\ ([0-9]+) ]] && marks+=" ${SYMBOL_GIT_BEHIND}${BASH_REMATCH[1]}"
 
+        local bg_color fg_color
         if [[ $has_modified ]]; then
-            local bg_color=$COLOR_REPO_DIRTY_BG
-            local fg_color=$COLOR_REPO_DIRTY_FG
+            bg_color=$COLOR_REPO_DIRTY_BG
+            fg_color=$COLOR_REPO_DIRTY_FG
         else
-            local bg_color=$COLOR_REPO_CLEAN_BG
-            local fg_color=$COLOR_REPO_CLEAN_FG
+            bg_color=$COLOR_REPO_CLEAN_BG
+            fg_color=$COLOR_REPO_CLEAN_FG
         fi
         apply_color " ${branch}${marks} " $fg_color $bg_color
     }
@@ -117,12 +118,13 @@ __powerbash() {
     #    None                                                                  #
     # ------------------------------------------------------------------------ #
     build_seg_username() {
+        local bg_color fg_color
         if id -G | grep -qE '\<(544|0)\>' ; then
-            local bg_color=$COLOR_USERNAME_ROOT_BG
-            local fg_color=$COLOR_USERNAME_ROOT_FG
+            bg_color=$COLOR_USERNAME_ROOT_BG
+            fg_color=$COLOR_USERNAME_ROOT_FG
         else
-            local bg_color=$COLOR_USERNAME_BG
-            local fg_color=$COLOR_USERNAME_FG
+            bg_color=$COLOR_USERNAME_BG
+            fg_color=$COLOR_USERNAME_FG
         fi
         apply_color ' \\u ' $fg_color $bg_color
     }
@@ -142,12 +144,13 @@ __powerbash() {
     #    $1 - Last exit code                                                   #
     # ------------------------------------------------------------------------ #
     build_seg_ps() {
+        local bg_color fg_color
         if [[ $1 -eq 0 ]]; then
-            local bg_color=$COLOR_CMD_PASSED_BG
-            local fg_color=$COLOR_CMD_PASSED_FG
+            bg_color=$COLOR_CMD_PASSED_BG
+            fg_color=$COLOR_CMD_PASSED_FG
         else
-            local bg_color=$COLOR_CMD_FAILED_BG
-            local fg_color=$COLOR_CMD_FAILED_FG
+            bg_color=$COLOR_CMD_FAILED_BG
+            fg_color=$COLOR_CMD_FAILED_FG
         fi
         apply_color ' \\$ ' $fg_color $bg_color
     }
@@ -178,25 +181,27 @@ __powerbash() {
 
         local separator
         for i in ${!folders[*]}; do
+            local folder
             if [[ $i -eq 0 ]] || [[ $i -gt $limit ]]; then
-                local folder="${folders[$i]}"
+                folder="${folders[$i]}"
             elif [[ $i -eq 1 ]]; then
-                local folder="$SYMBOL_ELLIPSIS"
+                folder="$SYMBOL_ELLIPSIS"
             else
                 continue
             fi
 
+            local bg_color fg_color sp_color
             if [[ ! -w $PWD ]]; then
-                local bg_color=$COLOR_READONLY_BG
-                local fg_color=$COLOR_READONLY_FG
-                local sp_color=$COLOR_READONLY_SEPARATOR
+                bg_color=$COLOR_READONLY_BG
+                fg_color=$COLOR_READONLY_FG
+                sp_color=$COLOR_READONLY_SEPARATOR
             elif [[ $PWD == $HOME ]]; then
-                local bg_color=$COLOR_HOME_BG
-                local fg_color=$COLOR_HOME_FG
+                bg_color=$COLOR_HOME_BG
+                fg_color=$COLOR_HOME_FG
             else
-                local bg_color=$COLOR_PATH_BG
-                local fg_color=$COLOR_PATH_FG
-                local sp_color=$COLOR_PATH_SEPARATOR
+                bg_color=$COLOR_PATH_BG
+                fg_color=$COLOR_PATH_FG
+                sp_color=$COLOR_PATH_SEPARATOR
                 if [[ $i -eq $(( ${#folders[*]} - 1 )) ]]; then
                     fg_color=$COLOR_PATH_CWD
                 fi
