@@ -61,9 +61,9 @@ __powerbash() {
     #    $3 - Background color                                                 #
     # ------------------------------------------------------------------------ #
     apply_color() {
-        [[ $3 ]] && printf "\[\033[48;5;$3m\]"
-        [[ $2 ]] && printf "\[\033[38;5;$2m\]"
-        [[ $1 ]] && printf "$1"
+        [[ $3 ]] && echo -n "\[\033[48;5;$3m\]"
+        [[ $2 ]] && echo -n "\[\033[38;5;$2m\]"
+        [[ $1 ]] && echo -n "$1"
     }
 
     # ------------------------------------------------------------------------ #
@@ -82,7 +82,7 @@ __powerbash() {
 
         # check if there are modifications on current branch
         local has_modified="$($GIT_CMD status --porcelain 2> /dev/null)"
-        local untrack_count=$(grep '^?? ' <<< "$has_modified" | wc -l | awk '{print $1}')
+        local untrack_count=$(grep -c '^?? ' <<< "$has_modified" | awk '{print $1}')
 
         # count number of revisions ahead or behind origin
         local repo_status="$($GIT_CMD status --porcelain 2> /dev/null)"
@@ -177,7 +177,7 @@ __powerbash() {
             [[ $PWD =~ ^$HOME(/|$) ]] && folders="~${PWD#$HOME}"
             IFS='/' read -a folders <<< "${folders#'/'}"
         fi
-        local limit=$(( ${#folders[*]} - $MAX_PATH_DEPTH ))
+        local limit=$(( ${#folders[*]} - MAX_PATH_DEPTH ))
 
         local separator
         for i in ${!folders[*]}; do
@@ -195,7 +195,7 @@ __powerbash() {
                 bg_color=$COLOR_READONLY_BG
                 fg_color=$COLOR_READONLY_FG
                 sp_color=$COLOR_READONLY_SEPARATOR
-            elif [[ $PWD == $HOME ]]; then
+            elif [[ $PWD == "$HOME" ]]; then
                 bg_color=$COLOR_HOME_BG
                 fg_color=$COLOR_HOME_FG
             else
