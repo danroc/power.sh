@@ -77,15 +77,15 @@ __powerbash() {
         $GIT_CMD rev-parse --is-inside-work-tree &> /dev/null || return
 
         # get current branch name or hash
-        local branch="$($GIT_CMD symbolic-ref --short HEAD || $GIT_CMD describe --tags --always)"
+        local branch="$($GIT_CMD symbolic-ref HEAD || $GIT_CMD describe --tags --always)"
         [[ $branch ]] || return
 
         # check if there are modifications on current branch
-        local has_modified="$($GIT_CMD status --porcelain)"
+        local has_modified="$($GIT_CMD status --porcelain 2> /dev/null)"
         local untrack_count=$(grep '^?? ' <<< "$has_modified" | wc -l | awk '{print $1}')
 
         # count number of revisions ahead or behind origin
-        local repo_status="$($GIT_CMD status --porcelain --branch)"
+        local repo_status="$($GIT_CMD status --porcelain 2> /dev/null)"
         local marks=""
         [[ $untrack_count -gt 0 ]] && marks+=" ${SYMBOL_GIT_UNTRACKED}${untrack_count}"
         [[ $repo_status =~  ahead\ ([0-9]+) ]] && marks+=" ${SYMBOL_GIT_AHEAD}${BASH_REMATCH[1]}"
@@ -99,7 +99,7 @@ __powerbash() {
             bg_color=$COLOR_REPO_CLEAN_BG
             fg_color=$COLOR_REPO_CLEAN_FG
         fi
-        apply_color " ${branch}${marks} " $fg_color $bg_color
+        apply_color " ${branch#refs/heads/}${marks} " $fg_color $bg_color
     }
 
     # ------------------------------------------------------------------------ #
