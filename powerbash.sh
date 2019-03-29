@@ -85,7 +85,7 @@ __powerbash() {
         local untrack_count=$(grep -c '^?? ' <<< "$has_modified" | awk '{print $1}')
 
         # count number of revisions ahead or behind origin
-        local repo_status="$($GIT_CMD status --porcelain 2> /dev/null)"
+        local repo_status="$($GIT_CMD status --porcelain --branch 2> /dev/null)"
         local marks=""
         [[ $untrack_count -gt 0 ]] && marks+=" ${SYMBOL_GIT_UNTRACKED}${untrack_count}"
         [[ $repo_status =~  ahead\ ([0-9]+) ]] && marks+=" ${SYMBOL_GIT_AHEAD}${BASH_REMATCH[1]}"
