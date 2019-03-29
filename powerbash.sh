@@ -73,8 +73,8 @@ __powerbash() {
     # ------------------------------------------------------------------------ #
     build_seg_git() {
         # exit if git isn't installed or the folder isn't a valid git folder
-        hash git 2>/dev/null || return
-        $GIT_CMD rev-parse --is-inside-work-tree > /dev/null 2>&1 || return
+        hash git &> /dev/null || return
+        $GIT_CMD rev-parse --is-inside-work-tree &> /dev/null || return
 
         # get current branch name or hash
         local branch="$($GIT_CMD symbolic-ref --short HEAD || $GIT_CMD describe --tags --always)"
