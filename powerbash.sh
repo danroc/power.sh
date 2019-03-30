@@ -61,9 +61,9 @@ __powerbash() {
     #    $3 - Background color                                                 #
     # ------------------------------------------------------------------------ #
     apply_color() {
-        [[ $3 ]] && echo -n "\[\033[48;5;$3m\]"
-        [[ $2 ]] && echo -n "\[\033[38;5;$2m\]"
-        [[ $1 ]] && echo -n "$1"
+        [[ $3 ]] && printf "\[\033[48;5;%sm\]" "$3"
+        [[ $2 ]] && printf "\[\033[38;5;%sm\]" "$2"
+        [[ $1 ]] && printf "%s" "$1"
     }
 
     # ------------------------------------------------------------------------ #
@@ -74,31 +74,38 @@ __powerbash() {
     build_seg_git() {
         # exit if git isn't installed or the folder isn't a valid git folder
         hash git &> /dev/null || return
-        $GIT_CMD rev-parse --is-inside-work-tree &> /dev/null || return
-
-        # get current branch name or hash
-        local branch="$($GIT_CMD symbolic-ref HEAD || $GIT_CMD describe --tags --always)"
-        [[ $branch ]] || return
+        $GIT_CMD rev-parse &> /dev/null || return
 
         # check if there are modifications on current branch
-        local has_modified="$($GIT_CMD status --porcelain 2> /dev/null)"
-        local untrack_count=$(grep -c '^?? ' <<< "$has_modified" | awk '{print $1}')
+        local dirty=$($GIT_CMD status --porcelain 2> /dev/null)
+        local count=$(grep -c '^?? ' <<< "$dirty")
+        local marks=""
+        if [[ $count -gt 0 ]]; then
+            marks+=" $SYMBOL_GIT_UNTRACKED$count"
+        fi
 
         # count number of revisions ahead or behind origin
-        local repo_status="$($GIT_CMD status --porcelain --branch 2> /dev/null)"
-        local marks=""
-        [[ $untrack_count -gt 0 ]] && marks+=" ${SYMBOL_GIT_UNTRACKED}${untrack_count}"
-        [[ $repo_status =~  ahead\ ([0-9]+) ]] && marks+=" ${SYMBOL_GIT_AHEAD}${BASH_REMATCH[1]}"
-        [[ $repo_status =~ behind\ ([0-9]+) ]] && marks+=" ${SYMBOL_GIT_BEHIND}${BASH_REMATCH[1]}"
+        local status=$($GIT_CMD status --porcelain --branch 2> /dev/null)
+        if [[ $status =~ ahead\ ([0-9]+) ]]; then
+            marks+=" $SYMBOL_GIT_AHEAD${BASH_REMATCH[1]}"
+        fi
+        if [[ $status =~ behind\ ([0-9]+) ]]; then
+            marks+=" $SYMBOL_GIT_BEHIND${BASH_REMATCH[1]}"
+        fi
 
         local bg_color fg_color
-        if [[ $has_modified ]]; then
+        if [[ $dirty ]]; then
             bg_color=$COLOR_REPO_DIRTY_BG
             fg_color=$COLOR_REPO_DIRTY_FG
         else
             bg_color=$COLOR_REPO_CLEAN_BG
             fg_color=$COLOR_REPO_CLEAN_FG
         fi
+
+        # get current branch name or hash
+        local branch=$($GIT_CMD symbolic-ref HEAD 2> /dev/null || \
+                       $GIT_CMD describe --tags --always 2> /dev/null)
+
         apply_color " ${branch#refs/heads/}${marks} " $fg_color $bg_color
     }
 
@@ -108,8 +115,10 @@ __powerbash() {
     #    None                                                                  #
     # ------------------------------------------------------------------------ #
     build_seg_jobs() {
-        local count="$(jobs | wc -l | awk '{print $1}')"
-        [[ $count -gt 0 ]] && apply_color " $count " $COLOR_JOBS_FG $COLOR_JOBS_BG
+        local count=$(jobs | wc -l | xargs)
+        if [[ $count -gt 0 ]]; then
+            apply_color " $count " $COLOR_JOBS_FG $COLOR_JOBS_BG
+        fi
     }
 
     # ------------------------------------------------------------------------ #
@@ -170,12 +179,14 @@ __powerbash() {
     #    None                                                                  #
     # ------------------------------------------------------------------------ #
     build_seg_path() {
-        local folders="$PWD"
-        if [[ $PWD == "/" ]]; then
+        local folders=$PWD
+        if [[ $PWD == / ]]; then
             folders='/'
         else
-            [[ $PWD =~ ^$HOME(/|$) ]] && folders="~${PWD#$HOME}"
-            IFS='/' read -a folders <<< "${folders#'/'}"
+            if [[ $PWD =~ ^$HOME(/|$) ]]; then
+                folders="~${PWD#$HOME}"
+            fi
+            IFS='/' read -r -a folders <<< "${folders#'/'}"
         fi
         local limit=$(( ${#folders[*]} - MAX_PATH_DEPTH ))
 
@@ -208,7 +219,7 @@ __powerbash() {
             fi
             apply_color "$separator" $sp_color
             apply_color " $folder " $fg_color $bg_color
-            separator="$SYMBOL_PATH_SEPARATOR"
+            separator=$SYMBOL_PATH_SEPARATOR
         done
     }
 
