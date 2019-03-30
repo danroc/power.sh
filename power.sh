@@ -249,3 +249,33 @@ __powerbash() {
 
 __powerbash
 unset __powerbash
+
+alias -- -='cd -'
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias .....='cd ../../../..'
+alias ......='cd ../../../../..'
+
+alias df='df -h'
+alias du='du -h'
+alias vi='vim'
+
+alias grep='grep --color=auto'
+alias egrep='egrep --color=auto'
+alias fgrep='fgrep --color=auto'
+
+alias _='sudo'
+alias h='history'
+alias j='jobs -l'
+alias mkdir='mkdir -p'
+alias path='printf "${PATH//:/\\n}\n"'
+
+alias l='ls -lah'
+alias l.='ls -d .*'
+alias la='ls -lAh'
+alias ll='ls -lh'
+alias ls='ls --color=auto'
+[[ $OSTYPE == darwin* ]] && alias ls='ls -G'
+
+md() { mkdir "$1" && cd "$1"; }
