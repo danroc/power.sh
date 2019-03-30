@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 __powerbash() {
     # External commands
@@ -54,7 +54,7 @@ __powerbash() {
     COLOR_CMD_FAILED_FG=15
 
     # ------------------------------------------------------------------------ #
-    # Applies foreground/background colors.                                    #
+    # Apply foreground and background colors.                                  #
     # Arguments:                                                               #
     #    $1 - String to be printed                                             #
     #    $2 - Foreground color                                                 #
@@ -67,16 +67,16 @@ __powerbash() {
     }
 
     # ------------------------------------------------------------------------ #
-    # Builds the git segment.                                                  #
+    # Build the git segment.                                                   #
     # Arguments:                                                               #
     #    None                                                                  #
     # ------------------------------------------------------------------------ #
     build_seg_git() {
-        # exit if git isn't installed or the folder isn't a valid git folder
+        # Exit if Git isn't installed or current dir isn't a repo
         hash git &> /dev/null || return
         $GIT_CMD rev-parse &> /dev/null || return
 
-        # check if there are modifications on current branch
+        # Check if there are modifications on current branch
         local dirty=$($GIT_CMD status --porcelain 2> /dev/null)
         local count=$(grep -c '^?? ' <<< "$dirty")
         local marks=""
@@ -84,7 +84,7 @@ __powerbash() {
             marks+=" $SYMBOL_GIT_UNTRACKED$count"
         fi
 
-        # count number of revisions ahead or behind origin
+        # Count number of revisions ahead or behind origin
         local status=$($GIT_CMD status --porcelain --branch 2> /dev/null)
         if [[ $status =~ ahead\ ([0-9]+) ]]; then
             marks+=" $SYMBOL_GIT_AHEAD${BASH_REMATCH[1]}"
@@ -102,7 +102,7 @@ __powerbash() {
             fg_color=$COLOR_REPO_CLEAN_FG
         fi
 
-        # get current branch name or hash
+        # Get current branch name or hash
         local branch=$($GIT_CMD symbolic-ref HEAD 2> /dev/null || \
                        $GIT_CMD describe --tags --always 2> /dev/null)
 
@@ -110,7 +110,7 @@ __powerbash() {
     }
 
     # ------------------------------------------------------------------------ #
-    # Builds the jobs segment.                                                 #
+    # Build the jobs segment.                                                  #
     # Arguments:                                                               #
     #    None                                                                  #
     # ------------------------------------------------------------------------ #
@@ -122,7 +122,7 @@ __powerbash() {
     }
 
     # ------------------------------------------------------------------------ #
-    # Builds the username segment.                                             #
+    # Build the username segment.                                              #
     # Arguments:                                                               #
     #    None                                                                  #
     # ------------------------------------------------------------------------ #
@@ -139,7 +139,7 @@ __powerbash() {
     }
 
     # ------------------------------------------------------------------------ #
-    # Builds the hostname segment.                                             #
+    # Build the hostname segment.                                              #
     # Arguments:                                                               #
     #    None                                                                  #
     # ------------------------------------------------------------------------ #
@@ -148,7 +148,7 @@ __powerbash() {
     }
 
     # ------------------------------------------------------------------------ #
-    # Builds the PS segment.                                                   #
+    # Build the PS segment.                                                    #
     # Arguments:                                                               #
     #    $1 - Last exit code                                                   #
     # ------------------------------------------------------------------------ #
@@ -165,16 +165,18 @@ __powerbash() {
     }
 
     # ------------------------------------------------------------------------ #
-    # Builds the SSH segment.                                                  #
+    # Build the SSH segment.                                                   #
     # Arguments:                                                               #
     #    None                                                                  #
     # ------------------------------------------------------------------------ #
     build_seg_ssh() {
-        [[ $SSH_CLIENT ]] && apply_color " $SYMBOL_SSH " $COLOR_SSH_FG $COLOR_SSH_BG
+        if [[ $SSH_CLIENT ]]; then
+            apply_color " $SYMBOL_SSH " $COLOR_SSH_FG $COLOR_SSH_BG
+        fi
     }
 
     # ------------------------------------------------------------------------ #
-    # Builds the path segment.                                                 #
+    # Build the path segment.                                                  #
     # Arguments:                                                               #
     #    None                                                                  #
     # ------------------------------------------------------------------------ #
@@ -224,7 +226,7 @@ __powerbash() {
     }
 
     # ------------------------------------------------------------------------ #
-    # Sets the $PS1 variable.                                                  #
+    # Set the $PS1 variable.                                                   #
     # Arguments:                                                               #
     #    None                                                                  #
     # ------------------------------------------------------------------------ #
