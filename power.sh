@@ -1,6 +1,6 @@
 #!/bin/bash
 
-__powerbash() {
+_powershell() {
     # External commands
     GIT_CMD="env LANG=C git"
 
@@ -247,8 +247,8 @@ __powerbash() {
     PROMPT_COMMAND=set_ps1
 }
 
-__powerbash
-unset __powerbash
+_powershell
+unset _powershell
 
 alias -- -='cd -'
 alias ..='cd ..'
