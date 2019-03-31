@@ -135,7 +135,7 @@ _powershell() {
             bg_color=$COLOR_USERNAME_BG
             fg_color=$COLOR_USERNAME_FG
         fi
-        apply_color ' \\u ' $fg_color $bg_color
+        apply_color ' \u ' $fg_color $bg_color
     }
 
     # ------------------------------------------------------------------------ #
@@ -144,7 +144,7 @@ _powershell() {
     #    None                                                                  #
     # ------------------------------------------------------------------------ #
     build_seg_hostname() {
-        apply_color ' \\h ' $COLOR_HOSTNAME_FG $COLOR_HOSTNAME_BG
+        apply_color ' \h ' $COLOR_HOSTNAME_FG $COLOR_HOSTNAME_BG
     }
 
     # ------------------------------------------------------------------------ #
