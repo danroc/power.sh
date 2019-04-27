@@ -266,6 +266,9 @@ alias j='jobs -l'
 alias mkdir='mkdir -p'
 alias path='printf "${PATH//:/\\n}\n"'
 
+alias d='docker'
+alias g='git'
+
 alias l='ls -lah'
 alias l.='ls -d .*'
 alias la='ls -lAh'
