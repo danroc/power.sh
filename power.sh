@@ -261,8 +261,10 @@ alias egrep='egrep --color=auto'
 alias fgrep='fgrep --color=auto'
 
 alias _='sudo'
+alias s='sudo -s'
 alias h='history'
 alias j='jobs -l'
+alias p='pwd -P'
 alias mkdir='mkdir -p'
 alias path='printf "${PATH//:/\\n}\n"'
 
