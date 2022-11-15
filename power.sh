@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# -----------------------------------------------------------------------------
+# Constants
+
 # External commands
 GIT_COMMAND="env LANG=C git"
 
@@ -51,6 +54,9 @@ COLOR_CMD_PASSED_BG=236
 COLOR_CMD_PASSED_FG=15
 COLOR_CMD_FAILED_BG=161
 COLOR_CMD_FAILED_FG=15
+
+# -----------------------------------------------------------------------------
+# Private functions
 
 # --------------------------------------------------------------------------- #
 # Apply foreground and background colors.                                     #
@@ -249,6 +255,9 @@ set_ps1() {
 
 PROMPT_COMMAND=set_ps1
 
+# -----------------------------------------------------------------------------
+# Aliases
+
 alias -- -='cd -'
 alias ..='cd ..'
 alias ...='cd ../..'
@@ -286,4 +295,9 @@ alias ll='ls -lh'
 alias ls='ls --color=auto'
 [[ $OSTYPE == darwin* ]] && alias ls='ls -G'
 
-md() { mkdir -p -- "$1" && { cd -- "$1" || return 1; } }
+# -----------------------------------------------------------------------------
+# Public functions
+
+md() {
+    mkdir -p -- "$1" && { cd -- "$1" || return 1; }
+}
