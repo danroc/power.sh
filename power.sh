@@ -65,7 +65,7 @@ COLOR_CMD_FAILED_FG=15
 #    $2 - Foreground color                                                    #
 #    $3 - Background color                                                    #
 # --------------------------------------------------------------------------- #
-apply_color() {
+__psh_apply_color() {
     [[ $3 ]] && printf "\[\033[48;5;%sm\]" "$3"
     [[ $2 ]] && printf "\[\033[38;5;%sm\]" "$2"
     [[ $1 ]] && printf "%s" "$1"
@@ -76,7 +76,7 @@ apply_color() {
 # Arguments:                                                                  #
 #    None                                                                     #
 # --------------------------------------------------------------------------- #
-build_seg_git() {
+__psh_build_seg_git() {
     # Exit if Git isn't installed or current dir isn't a repo
     hash git &> /dev/null || return
     $GIT_COMMAND rev-parse &> /dev/null || return
@@ -114,7 +114,7 @@ build_seg_git() {
     branch=$($GIT_COMMAND symbolic-ref HEAD 2> /dev/null || \
              $GIT_COMMAND describe --tags --always 2> /dev/null)
 
-    apply_color " ${branch#refs/heads/}${marks} " $fg_color $bg_color
+    __psh_apply_color " ${branch#refs/heads/}${marks} " $fg_color $bg_color
 }
 
 # --------------------------------------------------------------------------- #
@@ -122,11 +122,11 @@ build_seg_git() {
 # Arguments:                                                                  #
 #    None                                                                     #
 # --------------------------------------------------------------------------- #
-build_seg_jobs() {
+__psh_build_seg_jobs() {
     local count
     count=$(jobs | wc -l | xargs)
     if [[ $count -gt 0 ]]; then
-        apply_color " $count " $COLOR_JOBS_FG $COLOR_JOBS_BG
+        __psh_apply_color " $count " $COLOR_JOBS_FG $COLOR_JOBS_BG
     fi
 }
 
@@ -135,7 +135,7 @@ build_seg_jobs() {
 # Arguments:                                                                  #
 #    None                                                                     #
 # --------------------------------------------------------------------------- #
-build_seg_username() {
+__psh_build_seg_username() {
     local bg_color fg_color
     if id -G | grep -qE '\<(544|0)\>'; then
         bg_color=$COLOR_USERNAME_ROOT_BG
@@ -144,7 +144,7 @@ build_seg_username() {
         bg_color=$COLOR_USERNAME_BG
         fg_color=$COLOR_USERNAME_FG
     fi
-    apply_color ' \u ' $fg_color $bg_color
+    __psh_apply_color ' \u ' $fg_color $bg_color
 }
 
 # --------------------------------------------------------------------------- #
@@ -152,8 +152,8 @@ build_seg_username() {
 # Arguments:                                                                  #
 #    None                                                                     #
 # --------------------------------------------------------------------------- #
-build_seg_hostname() {
-    apply_color ' \h ' $COLOR_HOSTNAME_FG $COLOR_HOSTNAME_BG
+__psh_build_seg_hostname() {
+    __psh_apply_color ' \h ' $COLOR_HOSTNAME_FG $COLOR_HOSTNAME_BG
 }
 
 # --------------------------------------------------------------------------- #
@@ -161,7 +161,7 @@ build_seg_hostname() {
 # Arguments:                                                                  #
 #    $1 - Last exit code                                                      #
 # --------------------------------------------------------------------------- #
-build_seg_ps() {
+__psh_build_seg_ps() {
     local bg_color fg_color
     if [[ $1 -eq 0 ]]; then
         bg_color=$COLOR_CMD_PASSED_BG
@@ -170,7 +170,7 @@ build_seg_ps() {
         bg_color=$COLOR_CMD_FAILED_BG
         fg_color=$COLOR_CMD_FAILED_FG
     fi
-    apply_color ' \$ ' $fg_color $bg_color
+    __psh_apply_color ' \$ ' $fg_color $bg_color
 }
 
 # --------------------------------------------------------------------------- #
@@ -178,9 +178,9 @@ build_seg_ps() {
 # Arguments:                                                                  #
 #    None                                                                     #
 # --------------------------------------------------------------------------- #
-build_seg_ssh() {
+__psh_build_seg_ssh() {
     if [[ $SSH_CLIENT ]]; then
-        apply_color " $SYMBOL_SSH " $COLOR_SSH_FG $COLOR_SSH_BG
+        __psh_apply_color " $SYMBOL_SSH " $COLOR_SSH_FG $COLOR_SSH_BG
     fi
 }
 
@@ -189,7 +189,7 @@ build_seg_ssh() {
 # Arguments:                                                                  #
 #    None                                                                     #
 # --------------------------------------------------------------------------- #
-build_seg_path() {
+__psh_build_seg_path() {
     local folders=$PWD
     if [[ $PWD == / ]]; then
         folders='/'
@@ -228,8 +228,8 @@ build_seg_path() {
                 fg_color=$COLOR_PATH_CWD
             fi
         fi
-        apply_color "$separator" $sp_color
-        apply_color " $folder " $fg_color $bg_color
+        __psh_apply_color "$separator" $sp_color
+        __psh_apply_color " $folder " $fg_color $bg_color
         separator=$SYMBOL_PATH_SEPARATOR
     done
 }
@@ -239,21 +239,21 @@ build_seg_path() {
 # Arguments:                                                                  #
 #    None                                                                     #
 # --------------------------------------------------------------------------- #
-set_ps1() {
+__psh_set_ps1() {
     local exit_code=$?
 
     PS1=""
-    PS1+="$(build_seg_ssh)"
-    # PS1+="$(build_seg_username)"
-    # PS1+="$(build_seg_hostname)"
-    PS1+="$(build_seg_path)"
-    PS1+="$(build_seg_git)"
-    PS1+="$(build_seg_jobs)"
-    PS1+="$(build_seg_ps $exit_code)"
+    PS1+="$(__psh_build_seg_ssh)"
+    # PS1+="$(__psh_build_seg_username)"
+    # PS1+="$(__psh_build_seg_hostname)"
+    PS1+="$(__psh_build_seg_path)"
+    PS1+="$(__psh_build_seg_git)"
+    PS1+="$(__psh_build_seg_jobs)"
+    PS1+="$(__psh_build_seg_ps $exit_code)"
     PS1+="\[\033[0m\] " # reset colors
 }
 
-PROMPT_COMMAND=set_ps1
+PROMPT_COMMAND=__psh_set_ps1
 
 # -----------------------------------------------------------------------------
 # Aliases
