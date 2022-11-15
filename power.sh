@@ -76,15 +76,17 @@ build_seg_git() {
     $GIT_COMMAND rev-parse &> /dev/null || return
 
     # Check if there are modifications on current branch
-    local dirty=$($GIT_COMMAND status --porcelain 2> /dev/null)
-    local count=$(grep -c '^?? ' <<< "$dirty")
-    local marks=""
+    local dirty count marks
+    dirty=$($GIT_COMMAND status --porcelain 2> /dev/null)
+    count=$(grep -c '^?? ' <<< "$dirty")
+    marks=""
     if [[ $count -gt 0 ]]; then
         marks+=" $SYMBOL_GIT_UNTRACKED$count"
     fi
 
     # Count number of revisions ahead or behind origin
-    local status=$($GIT_COMMAND status --porcelain --branch 2> /dev/null)
+    local status
+    status=$($GIT_COMMAND status --porcelain --branch 2> /dev/null)
     if [[ $status =~ ahead\ ([0-9]+) ]]; then
         marks+=" $SYMBOL_GIT_AHEAD${BASH_REMATCH[1]}"
     fi
@@ -102,8 +104,9 @@ build_seg_git() {
     fi
 
     # Get current branch name or hash
-    local branch=$($GIT_COMMAND symbolic-ref HEAD 2> /dev/null || \
-                   $GIT_COMMAND describe --tags --always 2> /dev/null)
+    local branch
+    branch=$($GIT_COMMAND symbolic-ref HEAD 2> /dev/null || \
+             $GIT_COMMAND describe --tags --always 2> /dev/null)
 
     apply_color " ${branch#refs/heads/}${marks} " $fg_color $bg_color
 }
@@ -114,7 +117,8 @@ build_seg_git() {
 #    None                                                                     #
 # --------------------------------------------------------------------------- #
 build_seg_jobs() {
-    local count=$(jobs | wc -l | xargs)
+    local count
+    count=$(jobs | wc -l | xargs)
     if [[ $count -gt 0 ]]; then
         apply_color " $count " $COLOR_JOBS_FG $COLOR_JOBS_BG
     fi
@@ -282,4 +286,4 @@ alias ll='ls -lh'
 alias ls='ls --color=auto'
 [[ $OSTYPE == darwin* ]] && alias ls='ls -G'
 
-md() { mkdir "$1" && cd "$1"; }
+md() { mkdir -p -- "$1" && { cd -- "$1" || return 1; } }
