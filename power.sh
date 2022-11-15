@@ -164,7 +164,7 @@ build_seg_ps() {
         bg_color=$COLOR_CMD_FAILED_BG
         fg_color=$COLOR_CMD_FAILED_FG
     fi
-    apply_color ' \\$ ' $fg_color $bg_color
+    apply_color ' \$ ' $fg_color $bg_color
 }
 
 # --------------------------------------------------------------------------- #
