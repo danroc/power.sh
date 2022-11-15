@@ -131,7 +131,7 @@ build_seg_jobs() {
 # --------------------------------------------------------------------------- #
 build_seg_username() {
     local bg_color fg_color
-    if id -G | grep -qE '\<(544|0)\>' ; then
+    if id -G | grep -qE '\<(544|0)\>'; then
         bg_color=$COLOR_USERNAME_ROOT_BG
         fg_color=$COLOR_USERNAME_ROOT_FG
     else
