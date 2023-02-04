@@ -11,6 +11,7 @@ PSH_MAX_PATH_DEPTH=4
 
 # Symbols
 PSH_SYMBOL_GIT_UNTRACKED='+'
+PSH_SYMBOL_GIT_MODIFIED='*'
 PSH_SYMBOL_GIT_AHEAD='↑'
 PSH_SYMBOL_GIT_BEHIND='↓'
 
@@ -84,10 +85,16 @@ __psh_build_seg_git() {
     # Check if there are modifications on current branch
     local dirty count marks
     dirty=$($PSH_GIT_COMMAND status --porcelain 2> /dev/null)
-    count=$(grep -c '^?? ' <<< "$dirty")
     marks=""
+    # Count untracked files
+    count=$(grep -c '^?? ' <<< "$dirty")
     if [[ $count -gt 0 ]]; then
         marks+=" $PSH_SYMBOL_GIT_UNTRACKED$count"
+    fi
+    # Count modified files
+    count=$(grep -c '^ M ' <<< "$dirty")
+    if [[ $count -gt 0 ]]; then
+        marks+=" $PSH_SYMBOL_GIT_MODIFIED$count"
     fi
 
     # Count number of revisions ahead or behind origin
