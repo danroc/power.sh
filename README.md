@@ -5,10 +5,10 @@ Minimalist Bash prompt.
 ## Installation
 
 Just download the [`power.sh`](https://github.com/danroc/power.sh/blob/main/power.sh)
-file from GitHub and source it from your `.bashrc` file:
+file, and source it from your `.bashrc`:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/danroc/power.sh/master/power.sh -o "$HOME/.power.sh"
+curl -fsSL https://github.com/danroc/power.sh/raw/main/power.sh -o "$HOME/.power.sh"
 echo 'source "$HOME/.power.sh"' >> "$HOME/.bashrc"
 ```
 
