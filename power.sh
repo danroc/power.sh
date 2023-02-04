@@ -289,6 +289,7 @@ alias path='printf "${PATH//:/\\n}\n"'
 
 alias d='docker'
 alias g='git'
+alias k='kubectl'
 
 alias l='ls -lah'
 alias l.='ls -d .*'
