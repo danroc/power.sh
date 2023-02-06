@@ -91,8 +91,8 @@ __psh_build_seg_git() {
     if [[ $count -gt 0 ]]; then
         marks+=" $PSH_SYMBOL_GIT_UNTRACKED$count"
     fi
-    # Count modified files
-    count=$(grep -c '^ M ' <<< "$dirty")
+    # Count modified or deleted files
+    count=$(grep -c '^.[MD] ' <<< "$dirty")
     if [[ $count -gt 0 ]]; then
         marks+=" $PSH_SYMBOL_GIT_MODIFIED$count"
     fi
