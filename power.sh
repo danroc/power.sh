@@ -1,61 +1,61 @@
 #!/bin/bash
 
 # -----------------------------------------------------------------------------
-# Constants
+# Configuration
 
 # External commands
-PSH_GIT_COMMAND="env LANG=C git"
+: "${PSH_GIT_COMMAND:='env LANG=C git'}"
 
 # Max number of path segments
-PSH_MAX_PATH_DEPTH=4
+: "${PSH_MAX_PATH_DEPTH:=4}"
 
 # Symbols
-PSH_SYMBOL_GIT_UNTRACKED='+'
-PSH_SYMBOL_GIT_DELETED='-'
-PSH_SYMBOL_GIT_MODIFIED='*'
-PSH_SYMBOL_GIT_AHEAD='↑'
-PSH_SYMBOL_GIT_BEHIND='↓'
+: "${PSH_SYMBOL_GIT_UNTRACKED:='+'}"
+: "${PSH_SYMBOL_GIT_DELETED:='-'}"
+: "${PSH_SYMBOL_GIT_MODIFIED:='*'}"
+: "${PSH_SYMBOL_GIT_AHEAD:='↑'}"
+: "${PSH_SYMBOL_GIT_BEHIND:='↓'}"
 
-PSH_SYMBOL_PATH_SEPARATOR='❯'
-PSH_SYMBOL_SSH='SSH'
-PSH_SYMBOL_ELLIPSIS='…'
+: "${PSH_SYMBOL_PATH_SEPARATOR:='❯'}"
+: "${PSH_SYMBOL_SSH:='SSH'}"
+: "${PSH_SYMBOL_ELLIPSIS:='…'}"
 
 # Color scheme
-PSH_COLOR_SSH_BG=166
-PSH_COLOR_SSH_FG=254
+: "${PSH_COLOR_SSH_BG:=166}"
+: "${PSH_COLOR_SSH_FG:=254}"
 
-PSH_COLOR_JOBS_BG=238
-PSH_COLOR_JOBS_FG=39
+: "${PSH_COLOR_JOBS_BG:=238}"
+: "${PSH_COLOR_JOBS_FG:=39}"
 
-PSH_COLOR_REPO_CLEAN_BG=148
-PSH_COLOR_REPO_CLEAN_FG=0
-PSH_COLOR_REPO_DIRTY_BG=161
-PSH_COLOR_REPO_DIRTY_FG=15
+: "${PSH_COLOR_REPO_CLEAN_BG:=148}"
+: "${PSH_COLOR_REPO_CLEAN_FG:=0}"
+: "${PSH_COLOR_REPO_DIRTY_BG:=161}"
+: "${PSH_COLOR_REPO_DIRTY_FG:=15}"
 
-PSH_COLOR_USERNAME_ROOT_BG=124
-PSH_COLOR_USERNAME_ROOT_FG=250
-PSH_COLOR_USERNAME_BG=240
-PSH_COLOR_USERNAME_FG=250
+: "${PSH_COLOR_USERNAME_ROOT_BG:=124}"
+: "${PSH_COLOR_USERNAME_ROOT_FG:=250}"
+: "${PSH_COLOR_USERNAME_BG:=240}"
+: "${PSH_COLOR_USERNAME_FG:=250}"
 
-PSH_COLOR_HOSTNAME_FG=250
-PSH_COLOR_HOSTNAME_BG=238
+: "${PSH_COLOR_HOSTNAME_FG:=250}"
+: "${PSH_COLOR_HOSTNAME_BG:=238}"
 
-PSH_COLOR_PATH_BG=237
-PSH_COLOR_PATH_FG=250
-PSH_COLOR_PATH_CWD=254
-PSH_COLOR_PATH_SEPARATOR=244
+: "${PSH_COLOR_PATH_BG:=237}"
+: "${PSH_COLOR_PATH_FG:=250}"
+: "${PSH_COLOR_PATH_CWD:=254}"
+: "${PSH_COLOR_PATH_SEPARATOR:=244}"
 
-PSH_COLOR_HOME_BG=31
-PSH_COLOR_HOME_FG=15
+: "${PSH_COLOR_HOME_BG:=31}"
+: "${PSH_COLOR_HOME_FG:=15}"
 
-PSH_COLOR_READONLY_BG=124
-PSH_COLOR_READONLY_FG=254
-PSH_COLOR_READONLY_SEPARATOR=248
+: "${PSH_COLOR_READONLY_BG:=124}"
+: "${PSH_COLOR_READONLY_FG:=254}"
+: "${PSH_COLOR_READONLY_SEPARATOR:=248}"
 
-PSH_COLOR_CMD_PASSED_BG=236
-PSH_COLOR_CMD_PASSED_FG=15
-PSH_COLOR_CMD_FAILED_BG=161
-PSH_COLOR_CMD_FAILED_FG=15
+: "${PSH_COLOR_CMD_PASSED_BG:=236}"
+: "${PSH_COLOR_CMD_PASSED_FG:=15}"
+: "${PSH_COLOR_CMD_FAILED_BG:=161}"
+: "${PSH_COLOR_CMD_FAILED_FG:=15}"
 
 # -----------------------------------------------------------------------------
 # Private functions
@@ -132,7 +132,7 @@ __psh_build_seg_git() {
         $PSH_GIT_COMMAND describe --tags --always 2> /dev/null \
     )
 
-    __psh_apply_color " ${branch#refs/heads/}${marks} " $fg_color $bg_color
+    __psh_apply_color " ${branch#refs/heads/}${marks} " "$fg_color" "$bg_color"
 }
 
 # --------------------------------------------------------------------------- #
@@ -144,7 +144,7 @@ __psh_build_seg_jobs() {
     local count
     count=$(jobs | wc -l | xargs)
     if [[ $count -gt 0 ]]; then
-        __psh_apply_color " $count " $PSH_COLOR_JOBS_FG $PSH_COLOR_JOBS_BG
+        __psh_apply_color " $count " "$PSH_COLOR_JOBS_FG" "$PSH_COLOR_JOBS_BG"
     fi
 }
 
@@ -162,7 +162,7 @@ __psh_build_seg_username() {
         bg_color=$PSH_COLOR_USERNAME_BG
         fg_color=$PSH_COLOR_USERNAME_FG
     fi
-    __psh_apply_color ' \u ' $fg_color $bg_color
+    __psh_apply_color ' \u ' "$fg_color" "$bg_color"
 }
 
 # --------------------------------------------------------------------------- #
@@ -171,7 +171,7 @@ __psh_build_seg_username() {
 #    None                                                                     #
 # --------------------------------------------------------------------------- #
 __psh_build_seg_hostname() {
-    __psh_apply_color ' \h ' $PSH_COLOR_HOSTNAME_FG $PSH_COLOR_HOSTNAME_BG
+    __psh_apply_color ' \h ' "$PSH_COLOR_HOSTNAME_FG" "$PSH_COLOR_HOSTNAME_BG"
 }
 
 # --------------------------------------------------------------------------- #
@@ -188,7 +188,7 @@ __psh_build_seg_ps() {
         bg_color=$PSH_COLOR_CMD_FAILED_BG
         fg_color=$PSH_COLOR_CMD_FAILED_FG
     fi
-    __psh_apply_color ' \$ ' $fg_color $bg_color
+    __psh_apply_color ' \$ ' "$fg_color" "$bg_color"
 }
 
 # --------------------------------------------------------------------------- #
@@ -198,7 +198,7 @@ __psh_build_seg_ps() {
 # --------------------------------------------------------------------------- #
 __psh_build_seg_ssh() {
     if [[ $SSH_CLIENT ]]; then
-        __psh_apply_color " $PSH_SYMBOL_SSH " $PSH_COLOR_SSH_FG $PSH_COLOR_SSH_BG
+        __psh_apply_color " $PSH_SYMBOL_SSH " "$PSH_COLOR_SSH_FG" "$PSH_COLOR_SSH_BG"
     fi
 }
 
@@ -213,7 +213,7 @@ __psh_build_seg_path() {
         folders='/'
     else
         if [[ $PWD =~ ^$HOME(/|$) ]]; then
-            folders="~${PWD#$HOME}"
+            folders="~${PWD#"$HOME"}"
         fi
         IFS='/' read -r -a folders <<< "${folders#'/'}"
     fi
@@ -246,8 +246,8 @@ __psh_build_seg_path() {
                 fg_color=$PSH_COLOR_PATH_CWD
             fi
         fi
-        __psh_apply_color "$separator" $sp_color
-        __psh_apply_color " $folder " $fg_color $bg_color
+        __psh_apply_color "$separator" "$sp_color"
+        __psh_apply_color " $folder " "$fg_color" "$bg_color"
         separator=$PSH_SYMBOL_PATH_SEPARATOR
     done
 }
