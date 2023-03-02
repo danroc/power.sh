@@ -3,22 +3,30 @@
 # -----------------------------------------------------------------------------
 # Configuration
 
+: "${PSH_ENABLE_SEGMENT_SSH:="true"}"
+: "${PSH_ENABLE_SEGMENT_USERNAME:="false"}"
+: "${PSH_ENABLE_SEGMENT_HOSTNAME:="false"}"
+: "${PSH_ENABLE_SEGMENT_PATH:="true"}"
+: "${PSH_ENABLE_SEGMENT_GIT:="true"}"
+: "${PSH_ENABLE_SEGMENT_JOBS:="true"}"
+: "${PSH_ENABLE_SEGMENT_EXIT_CODE:="true"}"
+
 # External commands
-: "${PSH_GIT_COMMAND:='env LANG=C git'}"
+: "${PSH_GIT_COMMAND:="env LANG=C git"}"
 
 # Max number of path segments
 : "${PSH_MAX_PATH_DEPTH:=4}"
 
 # Symbols
-: "${PSH_SYMBOL_GIT_UNTRACKED:='+'}"
-: "${PSH_SYMBOL_GIT_DELETED:='-'}"
-: "${PSH_SYMBOL_GIT_MODIFIED:='*'}"
-: "${PSH_SYMBOL_GIT_AHEAD:='↑'}"
-: "${PSH_SYMBOL_GIT_BEHIND:='↓'}"
+: "${PSH_SYMBOL_GIT_UNTRACKED:="+"}"
+: "${PSH_SYMBOL_GIT_DELETED:="-"}"
+: "${PSH_SYMBOL_GIT_MODIFIED:="*"}"
+: "${PSH_SYMBOL_GIT_AHEAD:="↑"}"
+: "${PSH_SYMBOL_GIT_BEHIND:="↓"}"
 
-: "${PSH_SYMBOL_PATH_SEPARATOR:='❯'}"
-: "${PSH_SYMBOL_SSH:='SSH'}"
-: "${PSH_SYMBOL_ELLIPSIS:='…'}"
+: "${PSH_SYMBOL_PATH_SEPARATOR:="❯"}"
+: "${PSH_SYMBOL_SSH:="SSH"}"
+: "${PSH_SYMBOL_ELLIPSIS:="…"}"
 
 # Color scheme
 : "${PSH_COLOR_SSH_BG:=166}"
@@ -261,13 +269,13 @@ __psh_set_ps1() {
     local exit_code=$?
 
     PS1=""
-    PS1+="$(__psh_build_seg_ssh)"
-    # PS1+="$(__psh_build_seg_username)"
-    # PS1+="$(__psh_build_seg_hostname)"
-    PS1+="$(__psh_build_seg_path)"
-    PS1+="$(__psh_build_seg_git)"
-    PS1+="$(__psh_build_seg_jobs)"
-    PS1+="$(__psh_build_seg_ps $exit_code)"
+    [[ $PSH_ENABLE_SEGMENT_SSH       == "true" ]] && PS1+="$(__psh_build_seg_ssh)"
+    [[ $PSH_ENABLE_SEGMENT_USERNAME  == "true" ]] && PS1+="$(__psh_build_seg_username)"
+    [[ $PSH_ENABLE_SEGMENT_HOSTNAME  == "true" ]] && PS1+="$(__psh_build_seg_hostname)"
+    [[ $PSH_ENABLE_SEGMENT_PATH      == "true" ]] && PS1+="$(__psh_build_seg_path)"
+    [[ $PSH_ENABLE_SEGMENT_GIT       == "true" ]] && PS1+="$(__psh_build_seg_git)"
+    [[ $PSH_ENABLE_SEGMENT_JOBS      == "true" ]] && PS1+="$(__psh_build_seg_jobs)"
+    [[ $PSH_ENABLE_SEGMENT_EXIT_CODE == "true" ]] && PS1+="$(__psh_build_seg_ps $exit_code)"
     PS1+="\[\033[0m\] " # reset colors
 }
 
