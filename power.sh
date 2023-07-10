@@ -66,6 +66,11 @@
 : "${PSH_COLOR_CMD_FAILED_FG:=15}"
 
 # -----------------------------------------------------------------------------
+# Constants
+
+: "${PSH_COLOR_RESET:=\[\033[0m\]}"
+
+# -----------------------------------------------------------------------------
 # Private functions
 
 # --------------------------------------------------------------------------- #
@@ -276,7 +281,7 @@ __psh_set_ps1() {
     [[ $PSH_ENABLE_SEGMENT_GIT       == "true" ]] && PS1+="$(__psh_build_seg_git)"
     [[ $PSH_ENABLE_SEGMENT_JOBS      == "true" ]] && PS1+="$(__psh_build_seg_jobs)"
     [[ $PSH_ENABLE_SEGMENT_EXIT_CODE == "true" ]] && PS1+="$(__psh_build_seg_ps $exit_code)"
-    PS1+="\[\033[0m\] " # reset colors
+    PS1+="$PSH_COLOR_RESET "
 }
 
 PROMPT_COMMAND=__psh_set_ps1
