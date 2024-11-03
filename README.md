@@ -32,6 +32,7 @@ The following environment variables can be set to configure power.sh:
 | `PSH_ENABLE_SEGMENT_SSH`       | `true`           |
 | `PSH_ENABLE_SEGMENT_USERNAME`  | `false`          |
 | `PSH_ENABLE_SEGMENT_HOSTNAME`  | `false`          |
+| `PSH_ENABLE_SEGMENT_RESTART`   | `true`           |
 | `PSH_ENABLE_SEGMENT_PATH`      | `true`           |
 | `PSH_ENABLE_SEGMENT_GIT`       | `true`           |
 | `PSH_ENABLE_SEGMENT_JOBS`      | `true`           |
@@ -43,6 +44,7 @@ The following environment variables can be set to configure power.sh:
 | `PSH_SYMBOL_GIT_MODIFIED`      | `*`              |
 | `PSH_SYMBOL_GIT_AHEAD`         | `↑`              |
 | `PSH_SYMBOL_GIT_BEHIND`        | `↓`              |
+| `PSH_SYMBOL_RESTART`           | `↺`              |
 | `PSH_SYMBOL_PATH_SEPARATOR`    | `❯`              |
 | `PSH_SYMBOL_SSH`               | `SSH`            |
 | `PSH_SYMBOL_ELLIPSIS`          | `…`              |
@@ -73,3 +75,5 @@ The following environment variables can be set to configure power.sh:
 | `PSH_COLOR_CMD_PASSED_FG`      | `15`             |
 | `PSH_COLOR_CMD_FAILED_BG`      | `161`            |
 | `PSH_COLOR_CMD_FAILED_FG`      | `15`             |
+| `PSH_COLOR_RESTART_BG`         | `124`            |
+| `PSH_COLOR_RESTART_FG`         | `250`            |
