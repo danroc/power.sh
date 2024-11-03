@@ -216,7 +216,9 @@ __psh_build_seg_ps() {
 # --------------------------------------------------------------------------- #
 __psh_build_seg_ssh() {
     if [[ $SSH_CLIENT ]]; then
-        __psh_apply_color " $PSH_SYMBOL_SSH " "$PSH_COLOR_SSH_FG" "$PSH_COLOR_SSH_BG"
+        __psh_apply_color " $PSH_SYMBOL_SSH " \
+            "$PSH_COLOR_SSH_FG" \
+            "$PSH_COLOR_SSH_BG"
     fi
 }
 
