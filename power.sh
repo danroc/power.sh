@@ -6,6 +6,7 @@
 : "${PSH_ENABLE_SEGMENT_SSH:="true"}"
 : "${PSH_ENABLE_SEGMENT_USERNAME:="false"}"
 : "${PSH_ENABLE_SEGMENT_HOSTNAME:="false"}"
+: "${PSH_ENABLE_SEGMENT_RESTART:="true"}"
 : "${PSH_ENABLE_SEGMENT_PATH:="true"}"
 : "${PSH_ENABLE_SEGMENT_GIT:="true"}"
 : "${PSH_ENABLE_SEGMENT_JOBS:="true"}"
@@ -23,6 +24,7 @@
 : "${PSH_SYMBOL_GIT_MODIFIED:="*"}"
 : "${PSH_SYMBOL_GIT_AHEAD:="↑"}"
 : "${PSH_SYMBOL_GIT_BEHIND:="↓"}"
+: "${PSH_SYMBOL_RESTART:="↺"}"
 
 : "${PSH_SYMBOL_PATH_SEPARATOR:="❯"}"
 : "${PSH_SYMBOL_SSH:="SSH"}"
@@ -64,6 +66,9 @@
 : "${PSH_COLOR_CMD_PASSED_FG:=15}"
 : "${PSH_COLOR_CMD_FAILED_BG:=161}"
 : "${PSH_COLOR_CMD_FAILED_FG:=15}"
+
+: "${PSH_COLOR_RESTART_BG:=124}"
+: "${PSH_COLOR_RESTART_FG:=250}"
 
 # -----------------------------------------------------------------------------
 # Constants
@@ -266,6 +271,17 @@ __psh_build_seg_path() {
 }
 
 # --------------------------------------------------------------------------- #
+# Build the restart required segment.                                         #
+# --------------------------------------------------------------------------- #
+__psh_build_seg_restart() {
+    if [[ -f /var/run/reboot-required ]]; then
+        __psh_apply_color " $PSH_SYMBOL_RESTART " \
+            "$PSH_COLOR_RESTART_FG" \
+            "$PSH_COLOR_RESTART_BG"
+    fi
+}
+
+# --------------------------------------------------------------------------- #
 # Set the $PS1 variable.                                                      #
 # Arguments:                                                                  #
 #    None                                                                     #
@@ -277,6 +293,7 @@ __psh_set_ps1() {
     [[ $PSH_ENABLE_SEGMENT_SSH       == "true" ]] && PS1+="$(__psh_build_seg_ssh)"
     [[ $PSH_ENABLE_SEGMENT_USERNAME  == "true" ]] && PS1+="$(__psh_build_seg_username)"
     [[ $PSH_ENABLE_SEGMENT_HOSTNAME  == "true" ]] && PS1+="$(__psh_build_seg_hostname)"
+    [[ $PSH_ENABLE_SEGMENT_RESTART   == "true" ]] && PS1+="$(__psh_build_seg_restart)"
     [[ $PSH_ENABLE_SEGMENT_PATH      == "true" ]] && PS1+="$(__psh_build_seg_path)"
     [[ $PSH_ENABLE_SEGMENT_GIT       == "true" ]] && PS1+="$(__psh_build_seg_git)"
     [[ $PSH_ENABLE_SEGMENT_JOBS      == "true" ]] && PS1+="$(__psh_build_seg_jobs)"
